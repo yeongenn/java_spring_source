@@ -1,6 +1,7 @@
 package pack.controller;
 
 import org.springframework.web.bind.annotation.GetMapping;
+import pack.config.AuthenticationContextHolder;
 import pack.config.CurrentUser;
 import pack.config.LoginCheck;
 import pack.dto.LoginResDto;
@@ -24,14 +25,14 @@ public class TestController {
     @Autowired
     private JwtService jwtService;
 
-    @PostMapping(value="/login", produces = "application/json; charset=utf8")
-    public ResponseEntity<LoginResDto> userLogin(@RequestBody UserDto userDto){
+    @PostMapping(value = "/login", produces = "application/json; charset=utf8")
+    public ResponseEntity<LoginResDto> userLogin(@RequestBody UserDto userDto) {
 
         try {
             String token = userService.login(userDto.getId(), userDto.getPassword());
 
             return ResponseEntity.ok(new LoginResDto(token, null));
-        } catch (IllegalArgumentException e){
+        } catch (IllegalArgumentException e) {
             return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(new LoginResDto(null, e.getMessage()));
         }
 
@@ -50,13 +51,24 @@ public class TestController {
 //        }
 //    }
 
+//    @LoginCheck
+//    @GetMapping("/mypage")
+//    public ResponseEntity<?> mypage(@CurrentUser String userId){
+//        try {
+//            UserDto userDto = User.toDto(userService.findById(userId));
+//            return ResponseEntity.ok(userDto);
+//        } catch (IllegalArgumentException e){
+//            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(e.getMessage());
+//        }
+//    }
+
     @LoginCheck
     @GetMapping("/mypage")
-    public ResponseEntity<?> mypage(@CurrentUser String userId){
+    public ResponseEntity<?> mypage() {
         try {
-            UserDto userDto = User.toDto(userService.findById(userId));
+            final UserDto userDto = User.toDto(AuthenticationContextHolder.getContext());
             return ResponseEntity.ok(userDto);
-        } catch (IllegalArgumentException e){
+        } catch (IllegalArgumentException e) {
             return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(e.getMessage());
         }
     }
