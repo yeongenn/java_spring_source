@@ -31,4 +31,11 @@ public class User {
                 .build();
     }
 
+    public void changePassword(String password){
+        this.password = password;
+    }
+
+    public void changeEmail(String email){
+        this.email = email;
+    }
 }

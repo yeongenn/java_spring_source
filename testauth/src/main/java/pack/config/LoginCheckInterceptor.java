@@ -50,7 +50,12 @@ public class LoginCheckInterceptor implements HandlerInterceptor {
         // token 유효성 검사 생략
         token = token.replace("Bearer ", "");
         final String userId = jwtService.getUserFromToken(token);
-        AuthenticationContextHolder.setContext(userService.findById(userId));
+
+        // AuthenticationContextHolder에 User 전체 저장
+//        AuthenticationContextHolder.setContext(userService.findById(userId));
+
+        // AuthenticationContextHolder에 userId만 저장
+        AuthenticationContextHolder.setContext(userId);
 
         //
         return true;
